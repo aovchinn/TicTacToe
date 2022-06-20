@@ -1,12 +1,42 @@
+import { useCallback, useReducer } from "react";
+
 import { Board } from "./Board";
+import {
+    TicTacToeContext,
+    ticTacToeReducer,
+    getInitialState,
+    Action,
+} from "./state/ticTacToeContext";
 
 export const Game = () => {
+    const [state, regularDispatch] = useReducer(
+        ticTacToeReducer,
+        undefined,
+        getInitialState
+    );
+
+    const dispatchThunk = useCallback(
+        (action: Action | Function) => {
+            if (typeof action === "function") {
+                console.log("game: dispatch got function")
+                action(state, regularDispatch);
+            } else {
+                console.log("game: dispatching regular action")
+                regularDispatch(action);
+            }
+        },
+        [state] //always recreated ? getState ?
+    );
+
+    console.log("render Game");
     return (
-        <div className="game">
-            <Board height={10} width={15} />
-            <div className="game-info">
-                <div className=""></div>
+        <TicTacToeContext.Provider value={{ state, dispatch: dispatchThunk }}>
+            <div className="game">
+                <Board />
+                <div className="game-info">
+                    <div className=""></div>
+                </div>
             </div>
-        </div>
+        </TicTacToeContext.Provider>
     );
 };

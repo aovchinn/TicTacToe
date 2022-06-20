@@ -1,12 +1,26 @@
-import { ReactElement, useState } from "react";
+import { useCallback } from "react";
+import { ReactElement, useContext } from "react";
+import { TicTacToeContext, TicTacToeState } from "./state/ticTacToeContext";
 
-interface BoardPropsI {
-    width: number;
-    height: number;
-}
+export const Board = () => {
+    const { state } = useContext(TicTacToeContext);
+    const { players } = state;
+    const activeSymbol = players[players.activeId];
+    console.log("render Board", activeSymbol);
+    const status = `Next player: ${activeSymbol}`;
+    return (
+        <div className="game-board">
+            <div className="board-status">{status}</div>
+            <Grid />
+        </div>
+    );
+};
 
-export const Board = ({ width, height }: BoardPropsI) => {
-    const [status] = useState("Next player: X");
+const Grid = () => {
+    console.log("render Grid");
+
+    const { state } = useContext(TicTacToeContext);
+    const { width, height } = state;
 
     const grid: ReactElement[] = [];
     for (let i = 0; i < height; i++) {
@@ -22,11 +36,8 @@ export const Board = ({ width, height }: BoardPropsI) => {
     };
 
     return (
-        <div className="game-board">
-            <div className="board-status">{status}</div>
-            <div className="board-grid" style={style}>
-                {grid}
-            </div>
+        <div className="board-grid" style={style}>
+            {grid}
         </div>
     );
 };
@@ -36,8 +47,37 @@ interface SquarePropsI {
     column: number;
 }
 
-export const Square = ({ row, column }: SquarePropsI) => {
-    // use myRedux
+const toggleCell =
+    (row: number, column: number) => (state: TicTacToeState, dispatch: any) => {
+        if (row < state.height && column < state.width) {
+            console.log("toggleCell dispatch");
+            return dispatch({
+                type: "toggle",
+                payload: { row, column },
+            });
+        }
 
-    return <button>{`${row};${column}`}</button>;
+        throw new Error(`invalid cell ${row}; ${column}`);
+    };
+
+export const Square = ({ row, column }: SquarePropsI) => {
+    console.log("render Square");
+
+    const { state, dispatch } = useContext(TicTacToeContext);
+    const value = state.gridData[row][column];
+    const toggle = useCallback(() => {
+        console.log("clicked", { row, column });
+        dispatch(toggleCell(row, column));
+    }, [row, column, dispatch]);
+
+    if (value === undefined) {
+        return <button onClick={toggle}>{`${row};${column}`}</button>;
+    }
+
+    const activeSymbol = state.players[value];
+    return <button>{activeSymbol}</button>;
+
+    // const [getState, dispatch] = useContext
+    // if clickable
+    // onClick = dispatch(toggle(row,column))
 };
