@@ -1,22 +1,26 @@
 .game-board {
     display: flex;
     flex-flow: column nowrap;
-    justify-content: center;
 }
 
 .board-status {
     font-size: 16px;
     font-weight: 500;
     color: rgb(94 94 94);
-    padding-bottom: 5px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    background-color: rgb(255 255 255 / 90%);
 }
 
 .board-grid {
     display: grid;
-    justify-content: center;
     gap: 1px 1px;
     grid-template-columns: repeat(var(--board-grid-width), min-content);
     grid-template-rows: repeat(var(--board-grid-height), min-content);
+    width: 100%;
+    overflow: auto;
 }
 
 .board-grid button {

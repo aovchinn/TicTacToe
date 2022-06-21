@@ -18,10 +18,10 @@ export const Game = () => {
     const dispatchThunk = useCallback(
         (action: Action | Function) => {
             if (typeof action === "function") {
-                console.log("game: dispatch got function")
+                console.log("game: dispatch got function");
                 action(state, regularDispatch);
             } else {
-                console.log("game: dispatching regular action")
+                console.log("game: dispatching regular action");
                 regularDispatch(action);
             }
         },
@@ -31,12 +31,7 @@ export const Game = () => {
     console.log("render Game");
     return (
         <TicTacToeContext.Provider value={{ state, dispatch: dispatchThunk }}>
-            <div className="game">
-                <Board />
-                <div className="game-info">
-                    <div className=""></div>
-                </div>
-            </div>
+            <Board />
         </TicTacToeContext.Provider>
     );
 };

@@ -71,11 +71,13 @@ export const Square = ({ row, column }: SquarePropsI) => {
     }, [row, column, dispatch]);
 
     if (value === undefined) {
-        return <button onClick={toggle}>{`${row};${column}`}</button>;
+        return (
+            <button type="button" onClick={toggle}>{`${row};${column}`}</button>
+        );
     }
 
     const activeSymbol = state.players[value];
-    return <button>{activeSymbol}</button>;
+    return <button type="button">{activeSymbol}</button>;
 
     // const [getState, dispatch] = useContext
     // if clickable
